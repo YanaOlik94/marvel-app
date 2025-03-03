@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useParams, Link } from 'react-router-dom';
+
 import useMarvelService from '../../services/MarvelService';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
@@ -9,7 +12,6 @@ import './charInfo.scss';
 const CharInfo = (props) =>  {
 
     const [char, setChar] = useState(null);
-
     const {loading, error, getCharacter, clearError} = useMarvelService();
 
     useEffect(() => {
@@ -50,6 +52,8 @@ const CharInfo = (props) =>  {
 
 const View = ({char}) => {
     const {name, description, thumbnail, homepage, wiki, comics} = char;
+    
+    console.log(comics)
 
     let imgStyle = {'objectFit' : 'cover'};
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
@@ -81,10 +85,12 @@ const View = ({char}) => {
                 {
                     comics.map((item, i) => {
                         // eslint-disable-next-line
-                        if (i > 9) return;
+                    if (i > 9) return;
                         return (
                             <li key={i} className="char__comics-item">
+                                <Link to={item.resourceURI}>
                                 {item.name}
+                                </Link>
                             </li>
                         )
                     })
@@ -92,6 +98,10 @@ const View = ({char}) => {
             </ul>
         </>
     )
+}
+
+CharInfo.propTypes = {
+    charId: PropTypes.number
 }
 
 export default CharInfo;

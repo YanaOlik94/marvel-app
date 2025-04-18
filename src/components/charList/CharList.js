@@ -13,7 +13,7 @@ const CharList = (props) =>  {
     const [offset, setOffset] = useState(90);
     const [charEnded, setcharEnded] = useState(false);
 
-    const {loading,error, getAllCharacters} =  useMarvelService();
+    const {loading, error, getAllCharacters} =  useMarvelService();
 
 
     useEffect(() => {

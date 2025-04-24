@@ -1,50 +1,36 @@
 import { useHttp } from '../hooks/http.hook';
-import md5 from 'crypto-js/md5';
 
 const useMarvelService = () => {
   const { loading, request, error, clearError } = useHttp();
 
   const _apiKey = 'apikey=d4eecb0c66dedbfae4eab45d312fc1df';
-  // const _apiBase = 'https://gateway.marvel.com:443/v1/public';
   const _apiBase = 'https://marvel-server-zeta.vercel.app';
   const _baseOffset = 20;
 
   const getAllCharacters = async (offset = _baseOffset) => {
-    const res = await request(
-      `${_apiBase}/characters?limit=9&${_apiKey}`
-      // `${_apiBase}/characters?limit=9&offset=${offset}&${_apiKey}`
-    );
+    const res = await request(`${_apiBase}/characters?limit=9&${_apiKey}`);
     console.log(res);
     return res.data.results.map(_transformCharacter);
   };
 
-  //Варіант модифікації готового методу пошуку на ім'я
-  // const getAllCharacters = async (offset = _baseOffset, name = '') => {
-  //     const res = await request(`${_apiBase}characters?limit=9&offset=${offset}${name ? `&name=${name}` : '' }&${_apiKey}`);
-  //     return res.data.results.map(_transformCharacter);
-  // }
-
   const getCharacterByName = async (name) => {
     const res = await request(`${_apiBase}/characters?name=Thor&${_apiKey}`);
-    // await request(`${_apiBase}/characters?name=${name}&${_apiKey}`);
     return res.data.results.map(_transformCharacter);
   };
 
   const getCharacter = async (id) => {
     const res = await request(`${_apiBase}/characters/${id}?${_apiKey}`);
-    // `${_apiBase}/characters/${id}?${_apiKey}`;
     return _transformCharacter(res.data.results[0]);
   };
 
   const getAllComics = async (offset = _baseOffset) => {
     const res = await request(`${_apiBase}/comics?limit=10&${_apiKey}`);
-    //  `${_apiBase}/comics?limit=9&offset=${offset}&${_apiKey}`;
+
     return res.data.results.map(_transformComics);
   };
 
   const getComic = async (id) => {
     const res = await request(`${_apiBase}/comics/${id}?${_apiKey}`);
-    // `${_apiBase}/comics/${id}?${_apiKey}`;
     return _transformComics(res.data.results[0]);
   };
 

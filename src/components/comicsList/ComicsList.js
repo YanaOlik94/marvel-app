@@ -18,7 +18,7 @@ const setContent = (process, Component, newItemLoading) => {
     case 'confirmed':
       return <Component />;
 
-    case 'erroe':
+    case 'error':
       return <ErrorMessage />;
 
     default:
@@ -29,31 +29,31 @@ const setContent = (process, Component, newItemLoading) => {
 const ComicsList = () => {
   const [comicsList, setComicsList] = useState([]);
   const [newItemLoading, setnewItemLoading] = useState(false);
-  const [offset, setOffset] = useState(0);
+  const [offset, setOffset] = useState(16);
   const [comicsEnded, setComicsEnded] = useState(false);
 
-  const { loading, error, getAllComics, process, setProcess } =
-    useMarvelService();
+  const { getAllComics, process, setProcess } = useMarvelService();
 
   useEffect(() => {
     onRequest(offset, true);
+    // eslint-disable-next-line
   }, []);
 
   const onRequest = (offset, initial) => {
     initial ? setnewItemLoading(false) : setnewItemLoading(true);
-    getAllComics(offset)
+    getAllComics()
       .then(onComicsListLoaded)
       .then(() => setProcess('confirmed'));
   };
 
   const onComicsListLoaded = (newComicsList) => {
     let ended = false;
-    if (newComicsList.length < 8) {
+    if (newComicsList.length < 9) {
       ended = true;
     }
     setComicsList([...comicsList, ...newComicsList]);
     setnewItemLoading(false);
-    setOffset(offset + 8);
+    setOffset(offset + 9);
     setComicsEnded(ended);
   };
 

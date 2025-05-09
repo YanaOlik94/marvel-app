@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import useMarvelService from '../../services/MarvelService';
 import PropTypes from 'prop-types';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
 
@@ -51,10 +51,10 @@ const CharList = (props) => {
       ended = true;
     }
 
-    setCharList((charList) => [...charList, ...newCharList]);
-    setNewItemLoading((newItemLoading) => false);
-    setOffset((offset) => offset + 9);
-    setcharEnded((charEnded) => ended);
+    setCharList([...charList, ...newCharList]);
+    setNewItemLoading(false);
+    setOffset(offset + 9);
+    setcharEnded(ended);
   };
 
   const itemRefs = useRef([]);
@@ -101,17 +101,25 @@ const CharList = (props) => {
       );
     });
 
-    return <ul className='char__grid'>{items}</ul>;
+    return (
+      <ul className='char__grid'>
+        <TransitionGroup component={null}>{items}</TransitionGroup>
+      </ul>
+    );
   }
+
+  const elements = useMemo(() => {
+    return setContent(process, () => renderItems(charList), newItemLoading);
+    // eslint-disable-next-line
+  }, [process]);
 
   return (
     <div className='char__list'>
-      {setContent(process, () => renderItems(charList), newItemLoading)}
-      {/* передаємо функціональний компонент, третій аргумент пропускаємо */}
+      {elements}
       <button
-        className='button button__main button__long'
         disabled={newItemLoading}
         style={{ display: charEnded ? 'none' : 'block' }}
+        className='button button__main button__long'
         onClick={() => onRequest(offset)}
       >
         <div className='inner'>load more</div>

@@ -6,7 +6,6 @@ import {
   ErrorMessage as FormikErrorMessage,
 } from 'formik';
 import * as Yup from 'yup';
-import setContent from '../../utils/setContent';
 import { Link } from 'react-router-dom';
 
 import useMarvelService from '../../services/MarvelService';
@@ -26,7 +25,9 @@ const CharSearchForm = () => {
   const updateChar = (name) => {
     clearError();
 
-    getCharacterByName(name).then(onCharLoaded);
+    getCharacterByName(name)
+      .then(onCharLoaded)
+      .then(() => setProcess('confirmed'));
   };
 
   const errorMessage =

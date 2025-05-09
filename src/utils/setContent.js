@@ -13,7 +13,7 @@ const setContent = (process, Component, data) => {
     case 'confirmed':
       return <Component data={data} />;
 
-    case 'erroe':
+    case 'error':
       return <ErrorMessage />;
 
     default:
